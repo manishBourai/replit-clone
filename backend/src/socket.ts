@@ -1,7 +1,8 @@
 import { spawn } from "node-pty";
 import { Server, Socket } from "socket.io";
 import os from "os"
-import { getFile } from "./s3.js";
+import { buildFileTree, getFileContent } from "./fs.js";
+import path from "path";
 
 
 export default function socket(httpServer:any) {
@@ -11,13 +12,17 @@ export default function socket(httpServer:any) {
             methods: ["GET", "POST"],
         },
 })
+
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash'
 io.on("connection", (socket:Socket) => {
+   const replId= socket.handshake.query.roomId
     const ptyProcess = spawn(shell, [],{
         name: 'xterm-color',
   cols: 80,
-  rows: 30
+  rows: 30,
+  cwd: path.join(process.cwd(),`./temp/code/${replId}`)
     });
+   
 
 socket.on("message",({data})=>{
     ptyProcess.write(data)
@@ -25,9 +30,23 @@ socket.on("message",({data})=>{
  ptyProcess.onData( (data:any) => {
     socket.send(JSON.stringify(data));
   });
-  socket.on("getFileContent",async({file})=>{
-    const response = await getFile(file)
-    socket.emit("file", response)
+
+  socket.on("getFileContent",async(name, callback)=>{
+    console.log(name);
+    const response = getFileContent(name)
+    callback(response)
+  })
+  
+    socket.on("file:tree", () => {
+      console.log(replId);
+      
+    const tree = buildFileTree(`./temp/code/${replId}`);
+    socket.emit("file:tree", tree);
+  });
+
+  socket.on("getFolder",(path:string, callback)=>{
+    const res= buildFileTree(path)
+    callback(res)
   })
 });
 

@@ -11,7 +11,7 @@ app.get("/file",async(req:Request,res:Response)=>{
    console.log(req.params);
    console.log(req.query.name);
    
-   const response= await listProject(`temp/code/${name}`,"./temp/code")
+   const response= await listProject(`temp/code/${name}`,`./temp/code/${name}`)
    const data:any=response?.map((e)=>{
       return e.Key
     })
@@ -31,8 +31,12 @@ app.post("/create",async(req:Request,res:Response)=>{
    }
   try {
     const response= await CopyS3(`temp/language/${language}/`,`temp/code/${name}/`)
+     const file= await listProject(`temp/code/${name}`,`./temp/code/${name}`)
+   const data:any=response?.map((e)=>{
+      return e.Key
+    })
     res.status(201).json({
-       data:response
+       data:data
     })
   } catch (error) {
    res.status(500).json({
@@ -40,13 +44,7 @@ app.post("/create",async(req:Request,res:Response)=>{
     })
   }
 })
-app.post("/code",async (req:Request,res:Response) => {
-   const { file }=req.body
-   const response = await getFile(file)
-    res.status(200).json({
-      data:response
-    })
-})
+
 app.get("/generate",(req,res)=>{
 try {
       

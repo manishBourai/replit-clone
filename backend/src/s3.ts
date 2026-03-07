@@ -48,17 +48,6 @@ export async function listProject(prefix: string, localDir:string) {
 }
 
 
-export async function getFile(key: string) {
-  const res = await s3.send(
-    new GetObjectCommand({
-      Bucket: BUCKET,
-      Key: key,
-    })
-  );
-
-  return await res.Body?.transformToString();
-}
-
 export async function saveFile(key: string, content: string) {
   await s3.send(
     new PutObjectCommand({
@@ -68,6 +57,17 @@ export async function saveFile(key: string, content: string) {
       ContentType: "text/plain",
     })
   );
+}
+
+export async function getFile(key: string) {
+  const file = await s3.send(
+    new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+    })
+  );
+
+  return await file.Body?.transformToString();
 }
 
 export async function deleteFile(key: string) {
