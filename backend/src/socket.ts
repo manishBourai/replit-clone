@@ -1,7 +1,7 @@
 import { spawn } from "node-pty";
 import { Server, Socket } from "socket.io";
 import os from "os"
-import { buildFileTree, getFileContent } from "./fs.js";
+import { buildFileTree, createFile, createFolder, deleteFile, deleteFolder, getFileContent, updateFile } from "./fs.js";
 import path from "path";
 
 
@@ -48,6 +48,31 @@ socket.on("message",({data})=>{
     const res= buildFileTree(path)
     callback(res)
   })
+  socket.on("createFile",({path},callback)=>{
+   console.log(path);
+    createFile(path)
+      const res= buildFileTree(`./temp/code/${replId}`);
+   callback(res)
+  })
+  socket.on("createFolder",({path},callback)=>{
+    createFolder(path)
+      const res= buildFileTree(`./temp/code/${replId}`);
+   callback(res)
+  })
+  socket.on("updateFile",({file,data}:{file:string,data:string})=>{
+    updateFile({file,data})
+  })
+  socket.on("delete",({path,type},callback)=>{
+    console.log(path);
+    if(type==="folder"){
+      deleteFolder(path)
+    }else{
+      deleteFile(path)
+    }
+   const res= buildFileTree(`./temp/code/${replId}`);
+   callback(res)
+  })
+
 });
 
 

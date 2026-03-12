@@ -9,10 +9,9 @@ type FileNode = {
   path: string
 };
 
-export function createFolder(data: string[]) {
-    data.forEach(e => {
-        fs.mkdirSync(e, { recursive: true });
-    });
+export function createFolder(data:string) {
+        fs.mkdirSync(data, { recursive: true });
+  
 }
 
 export function deleteFile(file: string) {
@@ -22,9 +21,22 @@ export function deleteFile(file: string) {
 export function createFile(file: string) {
     fs.writeFileSync(file, "");
 }
+export function updateFile({file,data}:{file:string,data:string}) {
+  console.log(data,file);
+  try {
+    fs.writeFileSync(file, data); 
+  } catch (error) {
+    console.error("somthing went wrong");
+    
+  } 
+}
 
 export function getFileContent(file: string) {
-    return fs.readFileSync(file, "utf-8");
+   try {
+     return fs.readFileSync(file, "utf-8");
+   } catch (error) {
+    console.error("somthing went wrong")
+   }
 }
 
 export function buildFileTree(dirPath: string): FileNode[] {
@@ -52,4 +64,12 @@ export function buildFileTree(dirPath: string): FileNode[] {
       path:`${dirPath}/${file}`
     };
   });
+}
+export  function deleteFolder(path:string){
+  try {
+  fs.rmSync(path, { recursive: true, force: true });
+  console.log(`Directory ${path} and its contents deleted synchronously.`);
+} catch (err) {
+  console.error(`Error deleting directory synchronously: ${err}`);
+}
 }

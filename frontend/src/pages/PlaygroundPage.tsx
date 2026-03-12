@@ -122,7 +122,7 @@ function Playground() {
       {/* Terminal */}
       <div
         style={{ height: terminalHeight }}
-        className="w-full bg-black overflow-hidden"
+        className="w-full bg-black "
       >
         <div
           ref={terminalContainerRef}
