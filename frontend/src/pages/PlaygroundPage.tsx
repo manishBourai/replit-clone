@@ -31,8 +31,11 @@ function Playground() {
     socket.on("message", handleMessage);
 
     return () => {
-      socket.off("message", handleMessage);
-    };
+      socket.on("disconnect", ()=>{
+        console.log("disconnect");
+        
+      });
+    }
   }, []);
 
   /* ---------------- TERMINAL INIT ---------------- */
@@ -53,8 +56,8 @@ function Playground() {
 
     term.open(terminalContainerRef.current);
 
-    term.onKey((e) => {
-      socket.emit("message", { data: e.key });
+    term.onData((e) => {
+      socket.emit("message",  e);
     });
 
     return () => {

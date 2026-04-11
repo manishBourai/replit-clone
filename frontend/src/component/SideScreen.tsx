@@ -24,6 +24,12 @@ const SideScreen = () => {
       setFileTree(pre=>[...(pre||[]),...data])
       
     })
+    return () => {
+      socket.on("disconnect",(data="ok")=>{
+        console.log(data);
+        
+      });
+    }
     },[])
   
     async function handleContent(data:FileNode) {
