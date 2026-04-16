@@ -42,28 +42,29 @@ export function getFileContent(file: string) {
 export function buildFileTree(dirPath: string): FileNode[] {
   console.log(dirPath);
   
-  const files = fs.readdirSync(dirPath);
-
-  return files.map((file) => {
-    const fullPath = path.join(dirPath, file);
-    const stats = fs.statSync(fullPath);
-    
-    
-
-    if (stats.isDirectory()) {
+  try {
+    const files = fs.readdirSync(dirPath);
+    return files.map((file) => {
+      const fullPath = path.join(dirPath, file);
+      const stats = fs.statSync(fullPath);
+      
+      if (stats.isDirectory()) {
+        return {
+          name: file,
+          type: "folder",
+          path:`${dirPath}/${file}`
+        };
+      }
       return {
         name: file,
-        type: "folder",
+        type: "file",
         path:`${dirPath}/${file}`
       };
-    }
-
-    return {
-      name: file,
-      type: "file",
-      path:`${dirPath}/${file}`
-    };
-  });
+    });
+  } catch (error) {
+    console.error("Error building file tree:", error);
+    return [];
+  }
 }
 export  function deleteFolder(path:string){
   try {

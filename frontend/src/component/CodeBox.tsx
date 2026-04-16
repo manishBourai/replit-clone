@@ -3,12 +3,12 @@ import { Output } from "./Output";
 
 type CodeBoxProps = {
   data?: string;
-  onClick:(data:any)=>void
+  onClick: (data: any) => void
 };
 
 const CodeBox = ({ data = "", onClick }: CodeBoxProps) => {
   const codeRef = useRef<HTMLTextAreaElement | null>(null);
-  const [showOutput, setShowOutput] = useState<Boolean>(false);
+  const [showOutput, setShowOutput] = useState<boolean>(false);
 
   useEffect(() => {
     if (codeRef.current) {
@@ -50,20 +50,46 @@ const CodeBox = ({ data = "", onClick }: CodeBoxProps) => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex justify-between">
-        <button className="bg-green-900 rounded-sm px-1" onClick={() => onClick(codeRef.current?.value)}>Save</button>
-        <button className="bg-white rounded-sm px-1 text-black" onClick={() => setShowOutput(!showOutput)}>Output</button>
+    <div className="h-full flex flex-col bg-bg-primary">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-bg-elevated border-b border-border-primary">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-fg-primary">Editor</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onClick(codeRef.current?.value)}
+            className="px-3 py-1.5 text-sm bg-bg-active hover:bg-bg-active/80 text-fg-primary rounded-md transition-colors"
+          >
+            Save
+          </button>
+          <button
+            onClick={() => setShowOutput(!showOutput)}
+            className="px-3 py-1.5 text-sm bg-bg-secondary hover:bg-bg-hover border border-border-primary text-fg-primary rounded-md transition-colors"
+          >
+            {showOutput ? 'Hide' : 'Show'} Output
+          </button>
+        </div>
       </div>
-      <div className="flex flex-1 gap-4 mt-1">
-        <textarea
-          ref={codeRef}
-          defaultValue={data}
-          spellCheck={false}
-          onKeyDown={(e) => handleAutoClose(e)}
-          className="flex-1 p-3 bg-neutral-900 text-white font-mono text-sm outline-none resize-none overflow-auto"
-        />
-        {showOutput && <div className="flex-1"><Output /></div>}
+
+      {/* Editor Area */}
+      <div className="flex flex-1 gap-4 p-4 overflow-hidden">
+        <div className="flex-1 flex flex-col">
+          <textarea
+            ref={codeRef}
+            defaultValue={data}
+            spellCheck={false}
+            onKeyDown={(e) => handleAutoClose(e)}
+            className="flex-1 p-4 bg-bg-secondary border border-border-primary rounded-lg text-fg-primary font-mono text-sm outline-none resize-none overflow-auto focus:ring-2 focus:ring-border-focus focus:border-transparent transition-colors"
+            placeholder="Start coding..."
+          />
+        </div>
+
+        {showOutput && (
+          <div className="flex-1 bg-bg-secondary border border-border-primary rounded-lg overflow-hidden">
+            <Output />
+          </div>
+        )}
       </div>
     </div>
   );
