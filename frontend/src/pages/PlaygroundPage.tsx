@@ -75,6 +75,7 @@ function PlaygroundContent() {
       cursorBlink: true,
       fontSize: 14,
       fontFamily: 'var(--font-family-mono)',
+      lineHeight: 1.4,
       theme: {
         background: 'var(--bg-tertiary)',
         foreground: 'var(--fg-primary)',
@@ -170,10 +171,10 @@ function PlaygroundContent() {
         style={{ height: terminalHeight }}
         className="w-full bg-bg-tertiary border-t border-border-primary"
       >
-        <div className="flex items-center justify-between px-4 py-2 bg-bg-secondary border-b border-border-primary">
+        {/* <div className="flex items-center justify-between px-4 py-2 bg-bg-secondary border-b border-border-primary">
           <span className="text-sm font-medium text-fg-primary">Terminal</span>
           <span className="text-xs text-fg-tertiary">{terminalStatus}</span>
-        </div>
+        </div> */}
         <div
           ref={terminalContainerRef}
           className="w-full h-full p-2"

@@ -49,10 +49,6 @@ const SideScreen = () => {
     socket.on("file:tree", handleFileTree)
     socket.on("connect", handleConnect)
 
-    if (socket.connected) {
-      handleGetFileTree()
-    }
-
     const retryTimer = window.setInterval(() => {
       if (socket.connected && fileTree === null) {
         handleGetFileTree()
@@ -73,7 +69,7 @@ const SideScreen = () => {
     setCurrentPath(projectRoot)
     setCurrentPathType("folder")
     setCode("")
-  }, [projectRoot])
+  }, [])
 
   function mergeFiles(nextFiles: FileNode[]) {
     setFlatFiles((previousFiles) => {
@@ -129,7 +125,7 @@ const SideScreen = () => {
   }
 
   function handleCreateFile() {
-    if (!socket) return
+     if (!socket) return
 
     const fileName = prompt("Enter file name")
     if (!fileName) return
